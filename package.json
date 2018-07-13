@@ -1,6 +1,6 @@
 {
   "name": "ra-auth-firebase",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Firebase auth provider for React Admin",
   "source": "src/index.js",
   "main": "dist/ra-auth-firebase.js",
