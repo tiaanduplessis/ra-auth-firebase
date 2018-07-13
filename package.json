@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "standard --fix",
-    "build": "microbundle"
+    "build": "microbundle --compress false --target browser"
   },
   "keywords": [
     "react",

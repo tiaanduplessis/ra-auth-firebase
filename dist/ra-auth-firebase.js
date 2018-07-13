@@ -1,2 +1,147 @@
-function e(e){return e&&"object"==typeof e&&"default"in e?e.default:e}var r=require("react-admin"),t=e(require("firebase")),n=e(require("deep-assign")),u={admin:{path:"/users/",validate:function(){return!0}},keys:{permissions:"user",token:"firebase"},handleAuthStateChange:function(e,r){return new Promise(function(n,u){var i,a;return e?(i=r.admin.path+e.uid,t.database().ref(i).once("value").then(function(i){try{if(void 0!==(a=i.val())&&null!==a&&r.admin.validate(a)){var o;o=e.getIdToken();var s={profile:a,firebaseToken:o};return localStorage.setItem(r.keys.token,o),localStorage.setItem(r.keys.permissions,JSON.stringify(a)),n(s)}return t.auth().signOut(),localStorage.removeItem(r.keys.token),n(Promise.reject(new Error("Oops! You don't seem to be a authorized user")))}catch(e){return u(e)}}.bind(this),u)):(localStorage.removeItem(r.keys.token),o.call(this));function o(){return n()}})}};exports.FirebaseAuthProvider=function(e){void 0===e&&(e={}),e=n({},u,e);var i=function(){return new Promise(function(e){t.auth().onAuthStateChanged(e)})};return function(n,u){return new Promise(function(a,o){if(n===r.AUTH_LOGOUT)return e.handleAuthStateChange(null,e).then(function(e){try{return a(t.auth().signOut())}catch(e){return o(e)}},o);if(t.auth().currentUser)return t.auth().currentUser.reload().then(function(e){try{return s.call(this)}catch(e){return o(e)}}.bind(this),o);function s(){var s,c;if(n===r.AUTH_CHECK)return i().then(function(e){try{return t.auth().currentUser?a(!0):a(Promise.reject(new Error("Oops! You don't seem to be signed in.")))}catch(e){return o(e)}},o);if(n===r.AUTH_LOGIN){var h,l,f;if(h=(s=u).username,l=s.password,!(f=t.auth().currentUser)){var d=function(){try{return g.call(this)}catch(e){return o(e)}}.bind(this),m=function(e){try{return a(Promise.reject(e))}catch(e){return o(e)}};try{return t.auth().signInWithEmailAndPassword(h,l).then(function(e){try{return f=e,d()}catch(e){return m(e)}},m)}catch(e){m(e)}}function g(){return a(e.handleAuthStateChange(f,e))}return g.call(this)}return n===r.AUTH_GET_PERMISSIONS?(c=localStorage.getItem(e.keys.permissions),a(c?Promise.resolve(JSON.parse(c)):Promise.reject(new Error("Could not get permissions")))):a(!1)}return s.call(this)})}};
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var reactAdmin = require('react-admin');
+var firebase = _interopDefault(require('firebase'));
+var deepAssign = _interopDefault(require('deep-assign'));
+
+var baseConfig = {
+    admin: {
+        path: '/users/',
+        validate: function () { return true; }
+    },
+    keys: {
+        permissions: 'user',
+        token: 'firebase'
+    },
+    handleAuthStateChange: function (auth, config) { return new Promise(function ($return, $error) {
+        if (auth) {
+            var path, snapshot, profile;
+            path = config.admin.path + auth.uid;
+            return firebase.database().ref(path).once('value').then((function ($await_8) {
+                try {
+                    snapshot = $await_8;
+                    profile = snapshot.val();
+                    if (profile !== undefined && profile !== null && config.admin.validate(profile)) {
+                        var firebaseToken;
+                        firebaseToken = auth.getIdToken();
+                        var user = {
+                            profile: profile,
+                            firebaseToken: firebaseToken
+                        };
+                        localStorage.setItem(config.keys.token, firebaseToken);
+                        localStorage.setItem(config.keys.permissions, JSON.stringify(profile));
+                        return $return(user);
+                    } else {
+                        firebase.auth().signOut();
+                        localStorage.removeItem(config.keys.token);
+                        return $return(Promise.reject(new Error('Oops! You don\'t seem to be a authorized user')));
+                    }
+                    return $If_2.call(this);
+                } catch ($boundEx) {
+                    return $error($boundEx);
+                }
+            }).bind(this), $error);
+        } else {
+            localStorage.removeItem(config.keys.token);
+            return $If_2.call(this);
+        }
+        function $If_2() {
+            return $return();
+        }
+        
+    }); }
+};
+function authProvider (config) {
+    if ( config === void 0 ) config = {};
+
+    config = deepAssign({}, baseConfig, config);
+    var firebaseLoaded = function () { return new Promise(function (resolve) {
+        firebase.auth().onAuthStateChanged(resolve);
+    }); };
+    return function (type, params) { return new Promise(function ($return, $error) {
+        if (type === reactAdmin.AUTH_LOGOUT) {
+            return config.handleAuthStateChange(null, config).then(function ($await_9) {
+                try {
+                    return $return(firebase.auth().signOut());
+                } catch ($boundEx) {
+                    return $error($boundEx);
+                }
+            }, $error);
+        }
+        if (firebase.auth().currentUser) {
+            return firebase.auth().currentUser.reload().then((function ($await_10) {
+                try {
+                    return $If_4.call(this);
+                } catch ($boundEx) {
+                    return $error($boundEx);
+                }
+            }).bind(this), $error);
+        }
+        function $If_4() {
+            var assign;
+
+            if (type === reactAdmin.AUTH_CHECK) {
+                return firebaseLoaded().then(function ($await_11) {
+                    try {
+                        if (!firebase.auth().currentUser) {
+                            return $return(Promise.reject(new Error('Oops! You don\'t seem to be signed in.')));
+                        }
+                        return $return(true);
+                    } catch ($boundEx) {
+                        return $error($boundEx);
+                    }
+                }, $error);
+            }
+            if (type === reactAdmin.AUTH_LOGIN) {
+                var username, password, auth;
+                ((assign = params, username = assign.username, password = assign.password));
+                auth = firebase.auth().currentUser;
+                if (!auth) {
+                    var $Try_1_Post = (function () {
+                        try {
+                            return $If_7.call(this);
+                        } catch ($boundEx) {
+                            return $error($boundEx);
+                        }
+                    }).bind(this);
+                    var $Try_1_Catch = function (error) {
+                        try {
+                            return $return(Promise.reject(error));
+                        } catch ($boundEx) {
+                            return $error($boundEx);
+                        }
+                    };
+                    try {
+                        return firebase.auth().signInWithEmailAndPassword(username, password).then(function ($await_12) {
+                            try {
+                                auth = $await_12;
+                                return $Try_1_Post();
+                            } catch ($boundEx) {
+                                return $Try_1_Catch($boundEx);
+                            }
+                        }, $Try_1_Catch);
+                    } catch (error) {
+                        $Try_1_Catch(error);
+                    }
+                }
+                function $If_7() {
+                    return $return(config.handleAuthStateChange(auth, config));
+                }
+                
+                return $If_7.call(this);
+            }
+            
+            if (type === reactAdmin.AUTH_GET_PERMISSIONS) {
+                var data;
+                data = localStorage.getItem(config.keys.permissions);
+                return $return(data ? Promise.resolve(JSON.parse(data)) : Promise.reject(new Error('Could not get permissions')));
+            }
+            return $return(false);
+        }
+        
+        return $If_4.call(this);
+    }); };
+}
+
+exports.FirebaseAuthProvider = authProvider;
 //# sourceMappingURL=ra-auth-firebase.js.map
