@@ -27,7 +27,7 @@
     "react-admin": "*"
   },
   "devDependencies": {
-    "microbundle": "0.5.1",
+    "microbundle": "0.11.0",
     "standard": "11.0.1"
   },
   "standard": {
